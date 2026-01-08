@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Repetitionsquiz – Hauke Haiens Tod (50 Fragen)</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --text: #e9eef5;
+    --muted: rgba(233,238,245,0.75);
+    --accent: #7dd3fc;
+    --border: rgba(255,255,255,0.14);
+    --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    background: radial-gradient(1200px 900px at 20% 10%, rgba(125,211,252,0.12), transparent 55%),
+                radial-gradient(1000px 800px at 80% 20%, rgba(52,211,153,0.10), transparent 50%),
+                radial-gradient(900px 700px at 60% 90%, rgba(251,113,133,0.10), transparent 55%),
+                var(--bg);
+    color: var(--text);
+    line-height: 1.45;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    background: linear-gradient(to bottom, rgba(11,15,20,0.92), rgba(11,15,20,0.75));
+    border-bottom: 1px solid var(--border);
+  }
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 18px 16px;
+  }
+  .topgrid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+  }
+  h1 {
+    font-size: 18px;
+    margin: 0;
+    letter-spacing: 0.2px;
+  }
+  .sub {
+    margin: 6px 0 0 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .badge {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.05);
+    box-shadow: var(--shadow);
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .dot {
+    width: 10px; height: 10px; border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px rgba(125,211,252,0.18);
+  }
+  main .wrap { padding-top: 22px; padding-bottom: 40px; }
+  .card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .cardhead {
+    padding: 18px 18px 12px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.03);
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .progress {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.10);
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  .bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, rgba(125,211,252,0.95), rgba(52,211,153,0.95));
+    transition: width 280ms ease;
+  }
+  .kpis { display: flex; gap: 10px; flex-wrap: wrap; }
+  .kpi {
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .kpi strong { color: var(--text); font-weight: 800; }
+  .cardbody { padding: 18px; }
+  .qtitle { font-size: 16px; margin: 0 0 10px 0; }
+  .qtext { font-size: 15px; margin: 0 0 16px 0; }
+  .options { display: grid; gap: 10px; margin: 10px 0 12px 0; }
+  button.option {
+    width: 100%;
+    text-align: left;
+    border-radius: 14px;
+    padding: 12px 12px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    cursor: pointer;
+    transition: transform 90ms ease, background 120ms ease, border-color 120ms ease;
+  }
+  button.option:hover {
+    background: rgba(255,255,255,0.07);
+    transform: translateY(-1px);
+    border-color: rgba(125,211,252,0.35);
+  }
+  .ftbox { display: grid; gap: 10px; }
+  textarea {
+    width: 100%;
+    min-height: 110px;
+    resize: vertical;
+    border-radius: 14px;
+    padding: 12px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(0,0,0,0.25);
+    color: var(--text);
+    outline: none;
+  }
+  textarea:focus {
+    border-color: rgba(125,211,252,0.55);
+    box-shadow: 0 0 0 4px rgba(125,211,252,0.12);
+  }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; align-items: center; }
+  .btn {
+    border-radius: 999px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    cursor: pointer;
+    transition: transform 90ms ease, background 120ms ease, border-color 120ms ease, opacity 120ms ease;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .btn:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-1px);
+    border-color: rgba(125,211,252,0.35);
+  }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+  .btn.primary { background: rgba(125,211,252,0.12); border-color: rgba(125,211,252,0.35); }
+  .btn.primary:hover { background: rgba(125,211,252,0.18); border-color: rgba(125,211,252,0.55); }
+  .btn.danger { background: rgba(251,113,133,0.10); border-color: rgba(251,113,133,0.35); }
+  .btn.danger:hover { background: rgba(251,113,133,0.16); border-color: rgba(251,113,133,0.55); }
+  .msg {
+    margin-top: 12px;
+    border-radius: 14px;
+    padding: 12px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.05);
+  }
+  .msg.good { border-color: rgba(52,211,153,0.45); background: rgba(52,211,153,0.10); }
+  .msg.bad { border-color: rgba(251,113,133,0.45); background: rgba(251,113,133,0.10); }
+  .msg.warn { border-color: rgba(251,191,36,0.45); background: rgba(251,191,36,0.10); }
+  .msg .label { font-weight: 900; letter-spacing: 0.3px; }
+  .hint { margin-top: 10px; color: var(--muted); font-size: 13px; }
+  .solution {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(125,211,252,0.40);
+    background: rgba(125,211,252,0.08);
+  }
+  .solution h3 { margin: 0 0 6px 0; font-size: 14px; letter-spacing: 0.2px; }
+  footer { margin-top: 18px; color: var(--muted); font-size: 12px; }
+  code.k {
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap topgrid">
+    <div>
+      <h1>Repetitionsquiz: <span style="color:var(--accent);">Hauke Haiens Tod</span> – 50 Fragen (10 MC + 40 Freitext)</h1>
+      <p class="sub">
+        Sofortkorrektur mit <code class="k">3‑Versuche‑Logik</code>:
+        1× falsch → Meldung • 2× falsch → Meldung + Hinweis • 3× falsch → Musterlösung bleibt sichtbar bis <code class="k">Weiter</code>.
+        Richtig → Meldung + automatisch <code class="k">Weiter</code>.
+      </p>
+    </div>
+    <div class="badge" title="Status">
+      <span class="dot"></span>
+      <span id="statusText">bereit</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="card">
+      <div class="cardhead">
+        <div class="row">
+          <div class="kpis">
+            <div class="kpi">Frage: <strong id="qIndex">1</strong>/50</div>
+            <div class="kpi">Typ: <strong id="qType">—</strong></div>
+            <div class="kpi">Versuch: <strong id="attempt">0</strong>/3</div>
+            <div class="kpi">Richtig: <strong id="score">0</strong></div>
+            <div class="kpi">Falsch: <strong id="wrong">0</strong></div>
+          </div>
+          <div class="kpis">
+            <button class="btn danger" id="resetBtn" type="button">Reset (alles neu)</button>
+          </div>
+        </div>
+        <div class="progress" aria-label="Fortschritt">
+          <div class="bar" id="bar"></div>
+        </div>
+      </div>
+
+      <div class="cardbody">
+        <p class="qtitle" id="qTitle">Frage 1</p>
+        <p class="qtext" id="qText">…</p>
+
+        <div id="answerArea"></div>
+
+        <div class="actions">
+          <button class="btn primary" id="checkBtn" type="button">Antwort prüfen</button>
+          <button class="btn" id="nextBtn" type="button" disabled>Weiter →</button>
+        </div>
+
+        <div id="feedback"></div>
+
+        <footer>
+          Tipp: Bei Freitext zählt <em>Sinn</em> – du musst nicht wortwörtlich zitieren. Das Quiz prüft über Schlüsselwörter.
+          (Du kannst trotzdem in ganzen Sätzen antworten.)
+        </footer>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const QUESTIONS = [{"type": "mc", "q": "1) Warum besteht für Iven Johns von Beginn an ein Risiko darin, dass Wienke im Dorf als „Wienke Haien“ erkannt wird?", "options": ["Weil sie offiziell als Kind beim Deichbruch ertrunken gilt – ihr Auftauchen sprengt die Dorf-Erzählung.", "Weil sie als Ausländerin ohne Papiere gesucht wird.", "Weil sie im Dorf eine gesuchte Diebin ist.", "Weil sie in der Kirche exkommuniziert wurde."], "correctIndex": 0, "hint": "Denke an das, was alle über Wienkes Schicksal in der Sturmflutnacht „wissen“.", "solution": "Im Dorf gilt Wienke Haien als mit ihren Eltern ertrunken. Wenn sie lebendig auftaucht, wird die gesamte offizielle Geschichte (Tod, Schuld, Erbe, Geheimnisse) infrage gestellt."}, {"type": "mc", "q": "2) Was macht der angespülte Wal im Roman erzählerisch besonders wichtig?", "options": ["Er dient als „Zeiger“: Über den Priel/Lauf des Wassers wird eine entscheidende Schwachstelle sichtbar.", "Er ist ein Zeichen, dass der neue Deich vollkommen sicher ist.", "Er löst einen Streit um Fischereirechte aus, der das Dorf spaltet.", "Er ist bloß Kulisse für ein Volksfest ohne weitere Bedeutung."], "correctIndex": 0, "hint": "Stichwort: Wienkes Zeichnung – und was Iven dabei begreift.", "solution": "Der Wal wird zum Hinweisgeber: Wienke zeichnet den Prielverlauf, und Iven erkennt, dass der Priel noch da ist und in der Sturmflutnacht eine zentrale Rolle am Deich spielte."}, {"type": "mc", "q": "3) Welche Aussage trifft am besten zu, nachdem der Tresor geöffnet wird?", "options": ["Hauke Haien war adoptiert; Tede Haien ist nicht sein leiblicher Vater.", "Hauke Haien hat sein Land komplett verschenkt, bevor er heiratete.", "Im Tresor liegt ein Geständnis, dass Iven den Deich gesprengt hat.", "Der Tresor enthält nur Schmuck ohne weitere Dokumente."], "correctIndex": 0, "hint": "Denke an den Moment, als Iven die Unterlagen liest.", "solution": "Im Tresor finden sie amtliche Unterlagen: Der alte Tede Haien ist nicht Haukes biologischer Vater – Hauke wurde adoptiert (und damit öffnet sich die Frage nach seiner tatsächlichen Herkunft)."}, {"type": "mc", "q": "4) Was ist Pappes zentrales Ziel mit der Geschichte um Hauke Haien?", "options": ["Er will aus Hauke Haien einen Mythos/Gott machen, auf dem er eine „neue Religion“ und Macht aufbaut.", "Er will wissenschaftlich objektiv die Deichbau-Technik dokumentieren.", "Er will ausschließlich Iven Johns rehabilitieren.", "Er will nur Tourismusmarketing für die Region betreiben."], "correctIndex": 0, "hint": "Stichwort: „Mythos“, „Kirche“, „Schwur“, „Bündnis“.", "solution": "Pappe instrumentalisiert Hauke Haien als Mythos (fast wie eine Gottfigur), um eine religiös-machtpolitische Ordnung („Gemeinde“) zu errichten und andere über Schuld/Schwur zu binden."}, {"type": "mc", "q": "5) Warum wird Niß in der Sturmflutnacht als entscheidende Figur wichtig?", "options": ["Weil er eigentlich den neuen Deich sprengen sollte – und durch Vergiftung ausfällt.", "Weil er als einziger das Dorf rechtzeitig evakuiert.", "Weil er die Tresorkombination besitzt.", "Weil er Wienke im Heim großzieht."], "correctIndex": 0, "hint": "Erinnerung: Schalter/Funkgerät – und was Niß im Nachhinein sagt.", "solution": "Niß sollte auf Haiens Plan hin den neuen Deich sprengen, wenn der alte nicht hält. Er fällt aber durch Methanolvergiftung aus – die Sprengung bleibt aus, und genau dort steht Hauke, wo der alte Deich brechen muss."}, {"type": "mc", "q": "6) Was zeigt sich in Ann Grethes Deutung der Sturmflutnacht?", "options": ["Sie deutet das Geschehen religiös als „Erlösung“ von Sünde (Inzest) – und rechtfertigt dadurch Gewalt.", "Sie erkennt sofort nüchtern-technisch den Priel als Ursache.", "Sie hält alles für einen Zufall ohne moralische Dimension.", "Sie glaubt, Hauke sei von Außerirdischen entführt worden."], "correctIndex": 0, "hint": "Achte auf ihre Wortwahl: Rettung, Sünde, Bibelzitate.", "solution": "Ann Grethe interpretiert die Ereignisse religiös: Für sie sind Hauke/Elke „Sünder“, und die Sturmflut wird als (von Gott legitimierte) „Erlösung“ gedeutet – dadurch wird Schuld umgedeutet und Gewalt legitimiert."}, {"type": "mc", "q": "7) Was ist die konkrete Gefahr am Ende im Watt, als Pappe mit dem Pick-up auftaucht?", "options": ["Er will sie im Auto einsperren, sodass sie wie die Haiens „absaufen“ und die Geschichte sich „bewahrheitet“.", "Er will sie nur zurück ins Dorf fahren und alles erklären.", "Er will den Wal bergen und braucht Helfer.", "Er will den Deich sprengen, um die Küste zu retten."], "correctIndex": 0, "hint": "Stichwort: „Eingepfercht in einem kaputten Auto“.", "solution": "Pappe will sie in das Auto zwingen, einsperren und im auflaufenden Wasser sterben lassen – damit die Erzählung vom Tod der Haiens (Auto, Absaufen) „passend“ wiederholt wird."}, {"type": "mc", "q": "8) Was löst die unmittelbare Eskalation kurz vor Pappes Tod aus?", "options": ["Der Hund Perle greift Pappe an; Pappe erschießt den Hund – in der Ablenkung trifft Iven Pappe mit einem Wurf.", "Sten zieht die Pistole und schießt ohne Vorwarnung.", "Pappe rutscht aus und ertrinkt.", "Wienke vergiftet Pappe mit Methanol."], "correctIndex": 0, "hint": "Erst der Hund – dann der Wurf – dann Stens Griff.", "solution": "Perle greift an, Pappe schießt den Hund. In dem kurzen Moment der Ablenkung wirft Iven (mit einem Stein) und trifft Pappe; Sten drückt ihn anschließend in den Schlamm."}, {"type": "mc", "q": "9) Welche Funktion hat der Tresor im Haus der Haiens als Symbol?", "options": ["Er bündelt verdrängte Wahrheit/Erbe/Schuld als „versperrtes“ Wissen, das den Gegenwartskonflikt steuert.", "Er ist nur ein praktischer Safe für Schmuck ohne Bedeutung.", "Er steht für Modernisierung durch neue Technik (Elektrogeräte).", "Er ist ein Hinweis, dass Haien heimlich Banker war."], "correctIndex": 0, "hint": "Was verändert sich, als die Dokumente draußen sind?", "solution": "Der Tresor steht für das vergrabene Wissen (Herkunft, Inzest, Besitz, Deichpläne) – solange er verschlossen ist, hält die Dorflegende; geöffnet, kippt die Wahrheit die Machtverhältnisse."}, {"type": "mc", "q": "10) Welche Aussage beschreibt Wienkes Entwicklung am Ende am treffendsten?", "options": ["Sie spricht nicht mehr von sich wie von einer Fremden und entscheidet, in ihre Wohngruppe zurückzugehen.", "Sie übernimmt sofort den Hof und wird Bürgermeisterin.", "Sie verlässt das Land und bricht jeden Kontakt ab, ohne Abschied.", "Sie wird zur neuen Anführerin der „Fünfzig Gerechten“."], "correctIndex": 0, "hint": "Achte auf die letzte Kapitelbewegung: Rückfahrt, Rückspiegel, Halsband.", "solution": "Am Ende wirkt Wienke „bei sich“: Sie spricht nicht mehr distanziert von sich und will zurück – Iven setzt sie bei ihrer Wohngruppe ab und gibt ihr Claus’ Halsband."}, {"type": "ft", "q": "11) Welche zwei Rollen/Jobs hat Iven Johns (damals und/oder später), die zeigen, dass er „kein Polizist“ ist?", "keywordsAll": ["knecht", "automechaniker"], "acceptAny": false, "hint": "Er nennt seine Tätigkeiten selbst ausdrücklich.", "solution": "Iven beschreibt sich als Knecht und Automechaniker (und u. a. Türsteher) – ausdrücklich: Er ist kein Polizist."}, {"type": "ft", "q": "12) Welche zwei konkreten Handlungen führt Iven in der Sturmflutnacht auf dem Hof aus, um Tiere zu retten oder freizulassen?", "keywordsAll": [["kühe", "los"], ["hund", "perle"], ["geflügel", "käfig"], ["enten"], ["hühner"]], "acceptAny": true, "hint": "Denke an Stalltor, Ketten, Käfige.", "solution": "Er macht die Kühe los, löst den Hofhund Perle von der Kette und stößt die Geflügelkäfige auf (u. a. Enten/Jung­hennen)."}, {"type": "ft", "q": "13) Warum kann Elke Haien draußen am Deich nicht einfach wieder wegfahren (laut Pappes Darstellung)?", "keywordsAll": [["auto", "springt"], ["kaputt", "auto"], ["nicht", "anspringen"]], "acceptAny": true, "hint": "Stichwort: kaputtes Auto/Starten.", "solution": "Pappe behauptet: Elke nahm ein kaputtes Auto; draußen am Deich sprang es nicht mehr an – sie blieb dadurch in der Gefahr stecken."}, {"type": "ft", "q": "14) Was ist der Kern von Pappes Vorwurf gegen Iven in Bezug auf Elkes Tod?", "keywordsAll": [["wartung", "auto"], ["in", "tod", "fahren"], ["laufen", "lassen"]], "acceptAny": true, "hint": "Er wirft ihm nicht aktives Töten vor, sondern ein „Laufenlassen“ durch Technik/Verantwortung.", "solution": "Pappe behauptet, Iven habe als Zuständiger für die Wartung sie „in den Tod fahren lassen“ (indem das Auto nicht funktionierte/er es nicht verhinderte)."}, {"type": "ft", "q": "15) Was enthüllt der Tresor über Haukes Abstammung (in einem Satz)?", "keywordsAll": [["adoptiert"], ["nicht", "sohn"], ["tede", "haien", "nicht", "vater"]], "acceptAny": true, "hint": "Stichwort: Adoptionsschein.", "solution": "Der Tresor zeigt: Hauke Haien ist adoptiert; Tede Haien ist nicht sein leiblicher Vater."}, {"type": "ft", "q": "16) Welche Schlussfolgerung ziehen Iven/Peters aus den Dokumenten über Haukes Verhältnis zu Elke?", "keywordsAll": [["selben", "vater"], ["halb", "schwester"], ["inzest"]], "acceptAny": true, "hint": "Ein Satz im Gespräch: „Hauke hat denselben Vater wie Elke.“", "solution": "Sie folgern: Hauke und Elke haben denselben Vater – Elke ist seine (Halb‑)Schwester; Wienke ist durch Inzest gezeugt."}, {"type": "ft", "q": "17) Welche zwei Dinge liegen im Tresor, die Wienke direkt betreffen (ein Gegenstand + eine Art Dokument/Skizzen)?", "keywordsAll": [["bernstein", "kette"], ["deich", "skizzen"], ["deichentwürf"]], "acceptAny": true, "hint": "Stichwort: honigfarben, Insekt; außerdem Umschlag/Skizzen.", "solution": "Im Tresor finden sie u. a. Wienkes Bernsteinkette sowie Skizzen/Unterlagen (u. a. Deichentwürfe) und amtliche Dokumente."}, {"type": "ft", "q": "18) Wie nennt Iven Wienke vorübergehend – und warum tut er das?", "keywordsAll": [["elisabeth", "schmidt"], ["wienke", "haien"], ["tot"]], "acceptAny": true, "hint": "Der Name steht wörtlich im Dialog, inkl. Begründung (Tod-Glaube im Dorf).", "solution": "Er nennt sie „Elisabeth Schmidt“, weil alle glauben, Wienke Haien sei ertrunken; als „Wienke Haien“ wäre sie sofort gefährdet/ausgeliefert und würde die Dorf-Erzählung sprengen."}, {"type": "ft", "q": "19) Was zeichnet Wienke, das Iven auf eine zentrale Ursache/Schwachstelle des Deichprojekts bringt?", "keywordsAll": [["priel"], ["deich"], ["wasser"]], "acceptAny": true, "hint": "Stichwort: „Ein Wal hat es mir gezeigt.“", "solution": "Wienke zeichnet den Priel-/Wattstromverlauf bis zur Stelle, wo neuer und alter Deich zusammentreffen – dadurch erkennt Iven die entscheidende Schwachstelle."}, {"type": "ft", "q": "20) Welche Aussage Wienkes zeigt ihre besondere Logik/Andersartigkeit gleich bei der ersten Begegnung mit Pappe am Strand?", "keywordsAll": [["eltern"], ["meer"]], "acceptAny": true, "hint": "Wörtliche, kurze Antwort auf eine Alltagsfrage.", "solution": "Sie sagt sinngemäß/örtlich: „Die Eltern sind da draußen … sie sind im Meer.“"}, {"type": "ft", "q": "21) Welche Funktion hat die Gemeinde der „Fünfzig Gerechten“ im Roman (kurz, 1–2 Sätze)?", "keywordsAll": [["kontrolle"], ["religion"], ["macht"]], "acceptAny": true, "hint": "Denke an: Schuld, Sünde, Abgrenzung, Ausgrenzung, Druck.", "solution": "Die „Fünfzig Gerechten“ sind eine religiös aufgeladene Gemeinschaft, die Moral (Sünde/Erlösung) als Machtmittel nutzt, Zugehörigkeit reguliert (Wohnraum/Einfluss) und Gewalt/Vertuschung legitimiert."}, {"type": "ft", "q": "22) Wer war Jantje – und warum konnte Hauke ihn nicht einfach „entlassen“?", "keywordsAll": [["holländer"], ["konventikel"], ["kein", "vertrag"]], "acceptAny": true, "hint": "Stichwort: kein offizielles Arbeitsverhältnis.", "solution": "Jantje ist ein pietistischer Prediger aus Holland, der Konventikel abhält. Er hat keinen Vertrag mit der Landeskirche, daher kann Hauke ihn nicht regulär entlassen; er kann nur den Ort/ Rahmen einschränken."}, {"type": "ft", "q": "23) Warum gerät Hauke Haien mit Teilen des Dorfes in massiven Konflikt (nenne zwei konkrete Beispiele)?", "keywordsAll": [["land"], ["schafrost"], ["entschädigung"], ["schleuse"], ["peters"]], "acceptAny": true, "hint": "Es geht um Deichpolitik + Macht + rücksichtsloses Durchsetzen.", "solution": "Beispiele: Er kauft Peters entscheidendes Land, isoliert ihn politisch; entfernt ein Schafrost (Vollinas Stute bricht sich Beine); lehnt Entschädigungen ab; setzt kostspielige Schleuse durch; treibt Deichbau trotz zerstörter Felder voran."}, {"type": "ft", "q": "24) Welche technische/planerische Maßnahme erwägt Hauke in der Sturmflutnacht – und wozu?", "keywordsAll": [["sprengen"], ["deich"]], "acceptAny": true, "hint": "Stichwort: Schalter + Funkgerät.", "solution": "Hauke lässt eine Sprengung des neuen Deichs vorbereiten, um den Druck vom alten Deich zu nehmen, falls dieser dem Wasser nicht standhält."}, {"type": "ft", "q": "25) Was verhindert laut Niß die Sprengung – und wer steckt dahinter?", "keywordsAll": [["methanol"], ["vergiftung"], ["frau"]], "acceptAny": true, "hint": "Stichwort: Lösungsmittel im Flachmann; „Nicht einer. Eine.“", "solution": "Niß wird methanolvergiftet (Lösungsmittel im Flachmann) und fällt bewusstlos aus; er sagt, seine Frau habe das getan (als Teil der größeren Mitwisserschaft)."}, {"type": "ft", "q": "26) Wo steht Hauke Haien in dem Moment, als der alte Deich brechen muss – und warum ist das fatal?", "keywordsAll": [["bruch"], ["alter", "deich"], ["sprengung"]], "acceptAny": true, "hint": "Stichwort: „Er hatte sich darauf verlassen, dass …“", "solution": "Er steht genau an der Bruchstelle des alten Deichs, weil er sich darauf verlässt, dass der neue Deich gesprengt wird; ohne Sprengung bricht der alte Deich – Hauke geht unter."}, {"type": "ft", "q": "27) Welche Deutung gibt Ann Grethe dem Tod von Hauke und Elke – und welches Wort wiederholt sie dabei?", "keywordsAll": [["erlösung"], ["sünde"]], "acceptAny": true, "hint": "Achte auf ihr Vokabular im Streit mit Iven.", "solution": "Ann Grethe deutet ihren Tod als „Erlösung“ von „Sünde“ und spricht von „gerettet“/Rettung – religiöse Rechtfertigung statt technischer/zufälliger Erklärung."}, {"type": "ft", "q": "28) Welches biblische Verbot zitiert Ann Grethe sinngemäß, um Inzest als „Schandtat“ zu markieren?", "keywordsAll": [["scham"], ["schwester"]], "acceptAny": true, "hint": "Du musst nicht wortwörtlich zitieren – der Kern reicht.", "solution": "Sie zitiert sinngemäß das Verbot, die Schwester (die „Tochter deines Vaters“) sexuell zu entehren/„Scham zu entblößen“ – Inzest wird als Schandtat dargestellt."}, {"type": "ft", "q": "29) Welche Rolle spielt Trina Jans im Netz aus Wissen/Geheimnissen (2 Aspekte nennen)?", "keywordsAll": [["hebamme"], ["tresor"], ["geheim"]], "acceptAny": true, "hint": "Hebamme + Zugang zum Tresorwissen + Gerüchtekanal.", "solution": "Trina Jans ist Hebamme (hat Hauke/Elke/Wienke „auf die Welt geholt“), kennt Dorfgeheimnisse und – so wird vermutet – kennt auch Vertrag/Zahlenkombination des Tresors bzw. will die Dokumente."}, {"type": "ft", "q": "30) Warum ist der goldene Ring am Finger Wienkes in Pappes Haus mehr als nur Schmuck?", "keywordsAll": [["bindung"], ["symbol"], ["pappe"]], "acceptAny": true, "hint": "Denke an: Vereinnahmung, Ritual, Zugehörigkeit.", "solution": "Der Ring wirkt als Symbol der Vereinnahmung/Bindung (Pappes Zugriff, Gemeinde-Ritual, „Zugehörigkeit“). Er markiert, dass Wienke in ein Deutungs- und Machtgefüge gezogen wird."}, {"type": "ft", "q": "31) Was bedeutet die Formulierung, die Geschichte „bewahrheitet sich selbst“ (bei Pappe im Watt)?", "keywordsAll": [["inszenieren"], ["wiederholen"]], "acceptAny": true, "hint": "Es geht um die absichtliche Wiederholung des alten Musters.", "solution": "Pappe will die alte Erzählung reproduzieren: Er inszeniert, dass die Gruppe wie die Haiens in einem Auto im Wasser stirbt, damit die Geschichte „passt“ und sich scheinbar selbst bestätigt."}, {"type": "ft", "q": "32) Wie stirbt Pappe am Ende (kurz, zentrale Schritte)?", "keywordsAll": [["perle"], ["stein"], ["sten"]], "acceptAny": true, "hint": "Erst Ablenkung – dann Treffer – dann Fixierung im Schlamm.", "solution": "Pappe erschießt den Hund Perle; in der Ablenkung trifft Iven ihn (mit einem Wurf/Stein) zwischen den Augen; Sten drückt ihn anschließend mit dem Gesicht in den Wattschlamm, bis er stirbt."}, {"type": "ft", "q": "33) Was macht Wienke unmittelbar nach Pappes Tod mit dem Ring – und wofür steht das?", "keywordsAll": [["ring"], ["meer"]], "acceptAny": true, "hint": "Letzte Szene im Watt: eine Geste ohne Worte.", "solution": "Sie zieht den Ring ab und schleudert ihn ins Meer – als Zeichen des Abstreifens der Bindung/Vereinnahmung und der Rückgewinnung von Selbstbestimmung."}, {"type": "ft", "q": "34) Welche drei Männer agieren im „Ermittlungstrio“ der Gegenwartshandlung (ohne Wienke) – und welche Grundrolle hat jeder?", "keywordsAll": [["iven"], ["peters"], ["sten"]], "acceptAny": true, "hint": "Es sind genau drei: Mechaniker; Gegenspieler; Postbote/Freund.", "solution": "Iven Johns (früher Knecht/Mechaniker), Ole Peters (alter Gegenspieler Haiens), Sten (Postbote, Bindung an Wienke)."}, {"type": "ft", "q": "35) Nenne zwei Hinweise, dass Pappe nicht nur „Heimatforscher“, sondern Machtakteur ist.", "keywordsAll": [["gemeinde"], ["zimmer"], ["waffe"], ["mythos"]], "acceptAny": true, "hint": "Denke an: Wohnraum, Gemeinde, Inszenierung, Gewalt.", "solution": "Hinweise: Er ist Kopf der „Fünfzig Gerechten“ und steuert Zugehörigkeit (z. B. Zimmer/Untervermietung). Außerdem nutzt er Hauke als Mythos zur Machtbildung und greift am Ende zu Waffe/Inszenierung."}, {"type": "ft", "q": "36) Warum ist die Bernsteinkette mit dem Insekt im Roman besonders passend (Deutung in 1 Satz)?", "keywordsAll": [["bernstein"], ["eingeschlossen"], ["vergangenheit"]], "acceptAny": true, "hint": "In Bernstein ist Vergangenheit konserviert – wie im Dorf.", "solution": "Sie symbolisiert konservierte Vergangenheit/Wahrheit: Etwas Lebendiges wird eingeschlossen und bewahrt – analog zu Geheimnissen, die im Dorf/Tresor eingeschlossen bleiben."}, {"type": "ft", "q": "37) Was ist ein Priel – und warum ist er für den Deichkonflikt zentral?", "keywordsAll": [["watt"], ["wasserlauf"], ["druck"]], "acceptAny": true, "hint": "Ein Begriff aus dem Wattenmeer: Wasserlauf/Strömung.", "solution": "Ein Priel ist ein Wasserlauf/Wattstrom im Watt; sein Verlauf und Druck (v. a. bei Sturmflut) beeinflussen, wo Wasser gegen Deiche drückt – damit wird er zur zentralen Schwachstelle des Bauprojekts."}, {"type": "ft", "q": "38) Warum glaubt Pappe zunächst, Wienke könne ein „Trick“ von Iven sein?", "keywordsAll": [["tot"], ["identität"], ["einreden"]], "acceptAny": true, "hint": "Stichwort: „Wenn das ein Trick …“", "solution": "Weil Wienke laut offizieller Geschichte tot ist; Pappe vermutet daher Manipulation: Iven könne eine junge Waise finden und ihr eine Identität einreden, um Pappe zu täuschen/aus der Reserve zu locken."}, {"type": "ft", "q": "39) Welche psychologische Strategie nutzt Pappe gegenüber Wienke (nenne 2 Elemente)?", "keywordsAll": [["kakao"], ["väterlich"], ["misstrauen"]], "acceptAny": true, "hint": "Er bietet Wärme/Fürsorge – und säht Misstrauen.", "solution": "Er gibt sich väterlich (Kakao, sanfter Ton), erzählt eine alternative Schuldgeschichte und säht Misstrauen gegen Iven, um Wienke an sich zu binden und lenkbar zu machen."}, {"type": "ft", "q": "40) Welche Rolle spielt das Motiv „Sünde“ für die Dorfgemeinschaft/Gemeinde?", "keywordsAll": [["macht"], ["ausgrenzung"], ["gewalt"]], "acceptAny": true, "hint": "Sünde ist kein Privatbegriff, sondern ein Machtinstrument.", "solution": "„Sünde“ dient als moralisches Machtinstrument: Sie legitimiert Ausgrenzung, erzeugt Schuld, rechtfertigt Gewalt/„Erlösung“ und stabilisiert die Gemeindeordnung."}, {"type": "ft", "q": "41) Nenne ein Beispiel, wie Hauke Haien Menschen wirtschaftlich/politisch unter Druck setzt.", "keywordsAll": [["kauft"], ["land"]], "acceptAny": true, "hint": "Wähle ein konkretes Detail, nicht nur „er war streng“.", "solution": "Beispiel: Er kauft Antje Wohlers’ Land für einen Spottpreis; isoliert Peters aus allen Gremien; lehnt Entschädigungen für verwüstete Felder ab; kauft strategisch Land für den Koog."}, {"type": "ft", "q": "42) Was zeigt Stens Forsythienstock-„Rauchen“ am Morgen erzählerisch (1–2 Sätze)?", "keywordsAll": [["kindheit"], ["ritual"], ["warten"]], "acceptAny": true, "hint": "Das ist nicht nur eine witzige Szene – es verbindet Zeitebenen.", "solution": "Die Szene verbindet Gegenwart und Kindheit (Kastanienpfeifen) und markiert das nervöse Warten/Spannung; sie zeigt, wie Erinnerungen die Gegenwart deuten helfen (Tresor/Trina)."}, {"type": "ft", "q": "43) Warum ist es bedeutsam, dass das Bild mit dem Schimmel den Tresor verdeckt?", "keywordsAll": [["schimmel"], ["tresor"], ["wahrheit"]], "acceptAny": true, "hint": "Schimmel steht für Spuk-Story; Tresor für Dokumente.", "solution": "Das Schimmelbild steht für Mythos/Spuk-Erzählung, die die Dorffantasie füttert – und verdeckt wörtlich den Tresor mit der realen Wahrheit (Dokumente)."}, {"type": "ft", "q": "44) Was ist der Kernkonflikt zwischen „Erklärung durch Technik“ und „Erklärung durch Religion/Erzählung“ im Roman?", "keywordsAll": [["technik"], ["gegen"], ["mythos"]], "acceptAny": true, "hint": "Stichwort: Priel/Deich vs Sünde/Erlösung.", "solution": "Technisch: Deich, Priel, Sprengung erklären Geschehen. Religiös/erzählerisch: Sünde, Erlösung, Mythos deuten es moralisch um – und diese Deutung wird zur Macht über Menschen."}, {"type": "ft", "q": "45) Worin besteht Ivens zentrale Schuld-/Schamfrage (als Figur) – unabhängig davon, ob er juristisch schuld ist?", "keywordsAll": [["schweigen"], ["wienke"]], "acceptAny": true, "hint": "Es geht um sein Handeln nach der Nacht und sein Schweigen.", "solution": "Iven quält, dass er Wienke weggebracht hat und jahrelang schwieg (über Ursachen/Verstrickungen) – er lebt mit moralischer, nicht nur faktischer Schuld."}, {"type": "ft", "q": "46) Warum ist Peters’ Haltung gegenüber „Spukgedöns“ wichtig für die Spannung?", "keywordsAll": [["kontrast"], ["skepsis"]], "acceptAny": true, "hint": "Er ist der bodenständige Kontrast zur Mythisierung.", "solution": "Peters’ Spuk-Skepsis schafft Kontrast: Er benennt Pappes „Spukgedöns“ als Instrument – dadurch wird deutlich, wie stark Mythisierung als Manipulation wirkt und wie schwer sie trotzdem zu stoppen ist."}, {"type": "ft", "q": "47) Was meint Pappe mit dem „Schwur“, der die anderen an sein Bündnis zwingt?", "keywordsAll": [["schuld"], ["binden"]], "acceptAny": true, "hint": "Schuld als Klammer, nicht Liebe.", "solution": "Er meint: Wer (aktiv oder passiv) Anteil an Haiens Tod/Vertuschung hat, trägt Schuld – und diese Schuld bindet die Mitwisser an die Gemeinde und an Pappes Macht."}, {"type": "ft", "q": "48) Welche konkrete Information über Pappes Untervermietung zeigt, dass Zugehörigkeit kontrolliert wird?", "keywordsAll": [["zimmer"], ["nur"], ["gemeinde"]], "acceptAny": true, "hint": "Wörtlicher Dialog: Zimmer nur für Mitglieder.", "solution": "Es heißt sinngemäß: Nicht jeder bekommt ein Zimmer – nur wer Mitglied der Gemeinde ist. Wohnraum wird als Kontrollinstrument genutzt."}, {"type": "ft", "q": "49) Welche zwei Figuren werden (mindestens) mit dem Motiv „Vergiftung/Betäubung“ verbunden – und wozu dient es im Plot?", "keywordsAll": [["niß"], ["methanol"]], "acceptAny": true, "hint": "Niß: Methanol. Wienke: Ritual/Kräuter/Wasserbecken.", "solution": "Niß wird durch Methanol außer Gefecht gesetzt (Sprengung verhindert). Wienke wird in einem Ritual (Kraut, Wasserbecken) betäubt/geführt – beides dient der Steuerung von Handlungsfähigkeit durch andere."}, {"type": "ft", "q": "50) Formuliere in 2–3 Sätzen eine plausible These: Warum ist der Roman als „Neu-Erzählung“ des Schimmelreiters so wirkungsvoll?", "keywordsAll": [["neu"], ["deich"], ["mythos"]], "acceptAny": true, "hint": "Vergleiche: Deich/Mythos – aber moderne Machtmechanismen (Erzählung, Gemeinde, Schuld).", "solution": "These: Der Roman übernimmt Deich/Mythos-Struktur, verschiebt sie aber in eine Gegenwartshandlung mit Ermittlungsdruck. Dadurch wird sichtbar, wie moderne Gemeinschaften Wahrheit über Erzählung, Religion und Schuld kontrollieren – der alte Stoff wird als Machtanalyse neu lesbar."}];
+</script>
+
+<script>
+const qs = QUESTIONS;
+const $ = (id) => document.getElementById(id);
+
+const state = {
+  order: [],
+  idx: 0,
+  attempt: 0,
+  score: 0,
+  wrong: 0,
+  locked: false,
+  optionShuffle: null,
+};
+
+function saveState() {
+  localStorage.setItem("haukeQuizState_v1", JSON.stringify(state));
+}
+
+function loadState() {
+  const raw = localStorage.getItem("haukeQuizState_v1");
+  if (!raw) return false;
+  try {
+    const obj = JSON.parse(raw);
+    if (!obj || !Array.isArray(obj.order) || obj.order.length !== 50) return false;
+    Object.assign(state, obj);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+function newOrder() {
+  const arr = Array.from({length: qs.length}, (_, i) => i);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function normalize(s) {
+  return (s || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/\p{Diacritic}/gu, "")
+    .replace(/[^a-z0-9äöüß\s-]/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function containsAll(normalizedText, keywords) {
+  const t = normalizedText;
+  return keywords.every(k => t.includes(normalize(k)));
+}
+
+function containsAnyAlt(normalizedText, alternatives) {
+  return alternatives.some(group => containsAll(normalizedText, group));
+}
+
+function render() {
+  const q = qs[state.order[state.idx]];
+  state.attempt = 0;
+  state.locked = false;
+  state.optionShuffle = null;
+  $("feedback").innerHTML = "";
+  $("nextBtn").disabled = true;
+  $("checkBtn").disabled = false;
+
+  $("qIndex").textContent = (state.idx + 1);
+  $("qType").textContent = (q.type === "mc" ? "Multiple Choice" : "Freitext");
+  $("attempt").textContent = state.attempt;
+  $("score").textContent = state.score;
+  $("wrong").textContent = state.wrong;
+
+  $("qTitle").textContent = `Frage ${state.idx + 1}`;
+  $("qText").textContent = q.q;
+
+  const progress = Math.round(((state.idx) / qs.length) * 100);
+  $("bar").style.width = progress + "%";
+  $("statusText").textContent = "bereit";
+
+  const area = $("answerArea");
+  area.innerHTML = "";
+
+  if (q.type === "mc") {
+    const opts = q.options.map((txt, i) => ({ txt, originalIndex: i }));
+    for (let i = opts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [opts[i], opts[j]] = [opts[j], opts[i]];
+    }
+    state.optionShuffle = opts;
+
+    const wrap = document.createElement("div");
+    wrap.className = "options";
+    opts.forEach((o, localIdx) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "option";
+      btn.textContent = o.txt;
+      btn.dataset.localIdx = String(localIdx);
+      btn.setAttribute("aria-pressed", "false");
+      btn.addEventListener("click", () => {
+        if (state.locked) return;
+        document.querySelectorAll("button.option").forEach(b => {
+          b.setAttribute("aria-pressed", "false");
+          b.style.borderColor = "rgba(255,255,255,0.14)";
+          b.style.background = "rgba(255,255,255,0.04)";
+        });
+        btn.setAttribute("aria-pressed", "true");
+        btn.style.borderColor = "rgba(125,211,252,0.55)";
+        btn.style.background = "rgba(125,211,252,0.10)";
+      });
+      wrap.appendChild(btn);
+    });
+    area.appendChild(wrap);
+
+    const note = document.createElement("div");
+    note.className = "hint";
+    note.textContent = "Wähle eine Option und klicke dann auf „Antwort prüfen“.";
+    area.appendChild(note);
+  } else {
+    const box = document.createElement("div");
+    box.className = "ftbox";
+
+    const ta = document.createElement("textarea");
+    ta.id = "ftAnswer";
+    ta.placeholder = "Antwort hier eingeben (ganze Sätze ok).";
+    ta.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        $("checkBtn").click();
+      }
+    });
+    box.appendChild(ta);
+
+    const note = document.createElement("div");
+    note.className = "hint";
+    note.innerHTML = "Tipp: <code class='k'>Ctrl/⌘ + Enter</code> prüft sofort.";
+    box.appendChild(note);
+
+    area.appendChild(box);
+  }
+
+  saveState();
+}
+
+function getSelectedMcOriginalIndex() {
+  const pressed = Array.from(document.querySelectorAll("button.option"))
+    .find(b => b.getAttribute("aria-pressed") === "true");
+  if (!pressed) return null;
+  const localIdx = Number(pressed.dataset.localIdx);
+  if (!Number.isFinite(localIdx)) return null;
+  return state.optionShuffle[localIdx].originalIndex;
+}
+
+function showMessage(kind, title, text, hintText=null, solutionText=null) {
+  const fb = $("feedback");
+  const div = document.createElement("div");
+  div.className = `msg ${kind}`;
+  div.innerHTML = `<div class="label">${title}</div><div style="margin-top:6px;">${text}</div>`;
+  fb.innerHTML = "";
+  fb.appendChild(div);
+
+  if (hintText) {
+    const h = document.createElement("div");
+    h.className = "hint";
+    h.innerHTML = `<strong>Hinweis:</strong> ${hintText}`;
+    fb.appendChild(h);
+  }
+  if (solutionText) {
+    const s = document.createElement("div");
+    s.className = "solution";
+    s.innerHTML = `<h3>Musterlösung (bleibt sichtbar bis „Weiter“)</h3><div>${solutionText}</div>`;
+    fb.appendChild(s);
+  }
+}
+
+function lockAndEnableNext() {
+  state.locked = true;
+  $("checkBtn").disabled = true;
+  $("nextBtn").disabled = false;
+  $("statusText").textContent = "weiter";
+  saveState();
+}
+
+function autoAdvanceSoon() {
+  setTimeout(() => next(), 900);
+}
+
+function check() {
+  if (state.locked) return;
+  const q = qs[state.order[state.idx]];
+  state.attempt += 1;
+  $("attempt").textContent = state.attempt;
+
+  let correct = false;
+
+  if (q.type === "mc") {
+    const sel = getSelectedMcOriginalIndex();
+    if (sel === null) {
+      showMessage("warn", "Noch keine Auswahl", "Wähle zuerst eine Option aus.");
+      state.attempt -= 1;
+      $("attempt").textContent = state.attempt;
+      return;
+    }
+    correct = (sel === q.correctIndex);
+  } else {
+    const ta = $("ftAnswer");
+    const answer = normalize(ta ? ta.value : "");
+    if (!answer) {
+      showMessage("warn", "Leere Antwort", "Gib zuerst eine Antwort ein.");
+      state.attempt -= 1;
+      $("attempt").textContent = state.attempt;
+      return;
+    }
+    if (q.acceptAny) {
+      correct = containsAnyAlt(answer, q.keywordsAll);
+    } else {
+      correct = containsAll(answer, q.keywordsAll);
+    }
+  }
+
+  if (correct) {
+    state.score += 1;
+    $("score").textContent = state.score;
+    showMessage("good", "Richtig ✓", "Super – weiter zur nächsten Frage.");
+    state.locked = true;
+    $("checkBtn").disabled = true;
+    $("nextBtn").disabled = true;
+    $("statusText").textContent = "richtig";
+    saveState();
+    autoAdvanceSoon();
+    return;
+  }
+
+  state.wrong += 1;
+  $("wrong").textContent = state.wrong;
+
+  if (state.attempt === 1) {
+    showMessage("bad", "Falsch ✗", "Noch einmal – du hast 2 weitere Versuche.");
+    $("statusText").textContent = "nochmal";
+  } else if (state.attempt === 2) {
+    showMessage("bad", "Falsch ✗", "Noch einmal – jetzt mit Hinweis.", q.hint || "—");
+    $("statusText").textContent = "hinweis";
+  } else {
+    showMessage("warn", "3× falsch", "Musterlösung eingeblendet. Klicke auf „Weiter“.", null, q.solution || "—");
+    lockAndEnableNext();
+  }
+
+  saveState();
+}
+
+function next() {
+  if (state.idx >= qs.length - 1) {
+    $("bar").style.width = "100%";
+    $("qIndex").textContent = "50";
+    $("qType").textContent = "—";
+    $("attempt").textContent = "—";
+    $("statusText").textContent = "fertig";
+    $("answerArea").innerHTML = "";
+    $("checkBtn").disabled = true;
+    $("nextBtn").disabled = true;
+
+    const pct = Math.round((state.score / qs.length) * 100);
+    $("qTitle").textContent = "Fertig 🎉";
+    $("qText").innerHTML = `Du hast <strong>${state.score}</strong> von <strong>${qs.length}</strong> Fragen korrekt gelöst (<strong>${pct}%</strong>).<br><br>
+    <span style="color: var(--muted);">Tipp:</span> Wenn du das Quiz nochmal machen willst (mit neuer Reihenfolge), klicke auf <em>Reset</em>.`;
+    $("feedback").innerHTML = "";
+    saveState();
+    return;
+  }
+  state.idx += 1;
+  render();
+}
+
+function resetAll() {
+  localStorage.removeItem("haukeQuizState_v1");
+  state.order = newOrder();
+  state.idx = 0;
+  state.attempt = 0;
+  state.score = 0;
+  state.wrong = 0;
+  state.locked = false;
+  state.optionShuffle = null;
+  render();
+}
+
+$("checkBtn").addEventListener("click", check);
+$("nextBtn").addEventListener("click", () => {
+  if (!$("nextBtn").disabled) next();
+});
+$("resetBtn").addEventListener("click", () => {
+  const ok = confirm("Wirklich resetten? Fortschritt und Statistik werden gelöscht.");
+  if (!ok) return;
+  resetAll();
+});
+
+const loaded = loadState();
+if (!loaded) {
+  state.order = newOrder();
+}
+render();
+</script>
+</body>
+</html>
